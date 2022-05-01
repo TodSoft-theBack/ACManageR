@@ -7,6 +7,8 @@ using ACManageR.ExtentionMethods;
 using ACManageR.Entities;
 using ACManageR.ActionFilters;
 using ACManageR.ViewModels;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace ACManageR.Controllers
 {
@@ -14,9 +16,11 @@ namespace ACManageR.Controllers
     public class RequestsController : Controller
     {
         private ACManageRDBContext _database;
-        public RequestsController(ACManageRDBContext database)
+        private IWebHostEnvironment _hostEnvironment;
+        public RequestsController(ACManageRDBContext database, IWebHostEnvironment hostEnvironment)
         {
             _database = database;
+            _hostEnvironment = hostEnvironment;
         }
         public IActionResult Index()
         {
@@ -32,7 +36,26 @@ namespace ACManageR.Controllers
         [HttpPost]
         public IActionResult MakeRequest(MakeRequestVM input)
         {
-            return View();
+            if (!this.ModelState.IsValid)
+                return View(input);
+            var loggedUser = HttpContext.Session.GetObject<Users>("loggedUser");
+            var request = new Requests()
+            {
+                Name = input.Name,
+                Description = input.Description,
+                Address = input.Address,
+                UserId = loggedUser.Id
+            };
+            if (!(input.Picture is null))
+            {
+                string id = Guid.NewGuid().ToString();
+                string fileName = Path.Combine("RequestImages", id + Path.GetExtension(input.Picture.FileName));
+                input.Picture.CopyTo(new FileStream(fileName, FileMode.Create));
+                request.Picture = id + Path.GetExtension(input.Picture.FileName);
+            }
+            _database.Requests.Add(request);
+            _database.SaveChanges();
+            return Index();
         }
     }
 }

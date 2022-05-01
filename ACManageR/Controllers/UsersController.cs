@@ -28,13 +28,52 @@ namespace ACManageR.Controllers
         }
         public IActionResult CreateUser()
         {
-            
-            return View(new CreateUserVM() { RoleOptions = _database.Roles.Select(r => new SelectListItem(r.RoleType, r.Id.ToString())).ToList()});
+            ViewBag.RoleOptions = _database.Roles.Select(r => new SelectListItem(r.RoleType, r.Id.ToString())).ToList();
+            return View();
         }
         [HttpPost]
         public IActionResult CreateUser(CreateUserVM input)
         {
+            if (!this.ModelState.IsValid)
+                return View(input);
+            if (!(_database.Users.Where(u => u.Username == input.Username).FirstOrDefault() is null))
+            {
+                this.ModelState.AddModelError("Username", "Such user already exists!");
+                return View(new LogInVM());
+            }
+            var salt = HashingMethods.CreateSalt(32);
+            var user = new Users()
+            {
+                Username = input.Username,
+                PasswordSalt = salt,
+                PasswordHash = HashingMethods.Hash(input.Password, salt),
+                RoleId = input.RoleId
+            };
+            _database.Users.Add(user);
+            _database.SaveChanges();
+            return Index();
+        }
+        public IActionResult DeleteUser()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult DeleteUser(int id)
+        {
 
+            return Index();
+        }
+        public IActionResult EditUser()
+        {
+            ViewBag.RoleOptions = _database.Roles.Select(r => new SelectListItem(r.RoleType, r.Id.ToString())).ToList();
+            return View();
+        }
+        [HttpPost]
+        public IActionResult EditUser(int id)
+        {
+            if (!this.ModelState.IsValid)
+                return View();
+            
             return Index();
         }
     }

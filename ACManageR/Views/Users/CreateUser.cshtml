@@ -1,6 +1,7 @@
 ﻿@model ACManageR.ViewModels.CreateUserVM
 @{
     ViewData["Title"] = "Create user";
+
 }
 
 <h1 class="text-center">Create a new user</h1>
@@ -20,7 +21,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="RoleId" class="control-label"></label>
-                <select asp-for="RoleId" class="form-control" asp-items="Model.RoleOptions"/>
+                <select asp-for="RoleId" class="form-control" asp-items="ViewBag.RoleOptions"></select>
                 <span asp-validation-for="RoleId" class="text-danger"></span>
             </div>
             <div class="form-group">

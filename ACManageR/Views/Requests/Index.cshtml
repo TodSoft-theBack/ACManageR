@@ -30,13 +30,13 @@
         break;
 }
 <div class="pageContainer">
-    <div class="filterContainer">
-        <h3> Filters</h3>
-    </div>
     <div class="AllRequestsContainer">
+
         @foreach (var request in requests)
         {
-            <h1>@request.Name</h1>
+            <div class="requestContainer">
+                <h1>@request.Name</h1>
+            </div>
         }
     </div>
 </div>

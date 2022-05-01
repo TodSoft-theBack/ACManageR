@@ -12,10 +12,10 @@
     {
         <div class="userContainer">
             <h3>@user.Username : @user.Role.RoleType</h3>
-            <form action="/DeleteUser/@user.Id" method="post">
+            <form action="Users/DeleteUser/@user.Id" method="post">
                 <input type="submit" value="Delete user" class="btn btn-outline-danger" />
             </form>
-            <form action="/EditUser/@user.Id" method="post">
+            <form action="Users/EditUser/@user.Id" method="post">
                 <input type="submit" value="Edit user" class="btn btn-outline-danger" />
             </form>
         </div>

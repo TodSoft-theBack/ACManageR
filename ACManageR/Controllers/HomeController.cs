@@ -45,7 +45,7 @@ namespace ACManageR.Controllers
                 this.ModelState.AddModelError("authError", "Such user does not exist!");
                 return View(new LogInVM());
             }
-            if (user.PasswordHash != Hash(input.Password, user.PasswordSalt))
+            if (user.PasswordHash != HashingMethods.Hash(input.Password, user.PasswordSalt))
             {
                 this.ModelState.AddModelError("authError", "Wrong password dumb dumb!");
                 return View(input);
@@ -63,9 +63,9 @@ namespace ACManageR.Controllers
         {
             if (!this.ModelState.IsValid)
                 return View(input);
-            var salt = CreateSalt(32);
+            var salt = HashingMethods.CreateSalt(32);
             var user = new Users() { Username = input.Username};
-            user.PasswordHash = Hash(input.Password, salt);
+            user.PasswordHash = HashingMethods.Hash(input.Password, salt);
             user.PasswordSalt = salt;
             user.RoleId = (int)RolesEnum.Customer;
             _database.Users.Add(user);
@@ -82,18 +82,6 @@ namespace ACManageR.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        private static string CreateSalt(int size)
-        {
-            var sp = new RNGCryptoServiceProvider();
-            var buffer = new byte[size];
-            sp.GetBytes(buffer);
-            return Convert.ToBase64String(buffer);
-        }
-        private static string Hash(string input, string salt)
-        {
-            var bytes = Encoding.UTF8.GetBytes(input + salt);
-            var sha256String = new SHA1Managed();
-            return Convert.ToBase64String(sha256String.ComputeHash(bytes));
-        }
+        
     }
 }
