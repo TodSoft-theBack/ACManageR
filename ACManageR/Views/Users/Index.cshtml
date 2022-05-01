@@ -1,0 +1,23 @@
+﻿@using ACManageR.Entities
+@using ACManageR.ExtentionMethods
+@{
+    ViewData["Title"] = "All users";
+    var loggedUser = ViewContext.HttpContext.Session.GetObject<Users>("loggedUser");
+    List<Users> users = ViewBag.AllUsers;
+}
+<h1 class="text-center">All users</h1>
+<div class="allUsersContainer text-center">
+    <a asp-action="CreateUser" asp-controller="Users" class="btn btn-outline-primary"> Create a new user!</a>
+    @foreach (var user in users)
+    {
+        <div class="userContainer">
+            <h3>@user.Username : @user.Role.RoleType</h3>
+            <form action="/DeleteUser/@user.Id" method="post">
+                <input type="submit" value="Delete user" class="btn btn-outline-danger" />
+            </form>
+            <form action="/EditUser/@user.Id" method="post">
+                <input type="submit" value="Edit user" class="btn btn-outline-danger" />
+            </form>
+        </div>
+    }
+</div>

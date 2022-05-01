@@ -1,0 +1,43 @@
+﻿@using ACManageR.Entities
+@using ACManageR.ExtentionMethods
+@{
+    ViewData["Title"] = "All request";
+    var loggedUser = ViewContext.HttpContext.Session.GetObject<Users>("loggedUser");
+    List<Requests> requests = ViewBag.AllRequests;
+    if (loggedUser.RoleId == (int)RolesEnum.Customer)
+    {
+        requests = requests.Where(r => r.UserId == loggedUser.Id).ToList();
+        ViewData["Title"] = loggedUser.Username + "\'s request history";
+    }
+    else if (loggedUser.RoleId == (int)RolesEnum.Tech)
+    {
+        requests = requests.Where(r => r.TechnicianId == loggedUser.Id).ToList();
+        ViewData["Title"] = "Asigned to " + loggedUser.Username;
+    }
+
+}
+@switch (loggedUser.RoleId)
+{
+    case (int)RolesEnum.Admin:
+        <h1>All requests:</h1>
+        break;
+    case (int)RolesEnum.Customer:
+        <a asp-action="MakeRequest" class="btn btn-dark" style="float:right;">Make a request!</a>
+        <h1>History:</h1>
+        break;
+    case (int)RolesEnum.Tech:
+        <h1>Asigned to me:</h1>
+        break;
+}
+<div class="pageContainer">
+    <div class="filterContainer">
+        <h3> Filters</h3>
+    </div>
+    <div class="AllRequestsContainer">
+        @foreach (var request in requests)
+        {
+            <h1>@request.Name</h1>
+        }
+    </div>
+</div>
+

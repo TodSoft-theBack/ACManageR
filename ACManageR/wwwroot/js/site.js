@@ -1,4 +1,10 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
+﻿function ToggleInvisible(prompt) {
+    var element = document.querySelector("" + prompt);
+    if (element == null) {
+        return;
+    }
+    element.classList.toggle("invisible");
+}
+function ToggleLoggedUserMenu() {
+    ToggleInvisible(".user-greeting + ul");
+}

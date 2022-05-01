@@ -1,0 +1,6 @@
+﻿@using ACManageR.Entities
+@using ACManageR.ExtentionMethods
+@{
+    ViewData["Title"] = "Requests for today";
+    var loggedUser = ViewContext.HttpContext.Session.GetObject<Users>("loggedUser");
+}
