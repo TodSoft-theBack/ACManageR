@@ -32,7 +32,7 @@ namespace ACManageR.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult CreateUser(CreateUserVM input)
+        public IActionResult CreateUser(UserVM input)
         {
             if (!this.ModelState.IsValid)
                 return View(input);
@@ -51,30 +51,40 @@ namespace ACManageR.Controllers
             };
             _database.Users.Add(user);
             _database.SaveChanges();
-            return Index();
+            return RedirectToAction("Index");
         }
-        public IActionResult DeleteUser()
+        public IActionResult DeleteUserPage(int id)
         {
-            return View();
+            var user = _database.Users.Find(id);
+            return View(new UserVM(){ Id = id, Username = user.Username, RoleId = user.RoleId});
         }
         [HttpPost]
         public IActionResult DeleteUser(int id)
         {
-
-            return Index();
-        }
-        public IActionResult EditUser()
-        {
-            ViewBag.RoleOptions = _database.Roles.Select(r => new SelectListItem(r.RoleType, r.Id.ToString())).ToList();
-            return View();
-        }
-        [HttpPost]
-        public IActionResult EditUser(int id)
-        {
             if (!this.ModelState.IsValid)
                 return View();
-            
-            return Index();
+            var user = _database.Users.Find(id);
+            _database.Users.Remove(user);
+            _database.SaveChanges();
+            return RedirectToAction("Index");
+        }
+        public IActionResult EditUserPage(int id)
+        {
+            var user = _database.Users.Find(id);
+            var roleOptions = _database.Roles.Select(r => new SelectListItem(r.RoleType, r.Id.ToString())).ToList();
+            return View(new EditUserVM() { Id = id, Username = user.Username, RoleId = user.RoleId, RoleOptions = roleOptions });
+        }
+
+        [HttpPost]
+        public IActionResult EditUserPage(EditUserVM input)
+        {
+            if (!this.ModelState.IsValid)
+                return View(input);
+            var user = _database.Users.Find(input.Id);
+            user.RoleId = input.RoleId;
+            _database.Users.Update(user);
+            _database.SaveChanges();
+            return RedirectToAction("Index");
         }
     }
 }

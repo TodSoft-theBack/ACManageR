@@ -63,11 +63,15 @@ namespace ACManageR.Controllers
         {
             if (!this.ModelState.IsValid)
                 return View(input);
+            if (!(_database.Users.Where(u=> u.Username == input.Username).FirstOrDefault() is null))
+            {
+                this.ModelState.AddModelError("Username", "Such user already exists!");
+                return View(input);
+            }
             var salt = HashingMethods.CreateSalt(32);
             var user = new Users() { Username = input.Username};
             user.PasswordHash = HashingMethods.Hash(input.Password, salt);
             user.PasswordSalt = salt;
-            user.RoleId = (int)RolesEnum.Customer;
             _database.Users.Add(user);
             _database.SaveChanges();
             return RedirectToAction("Index", "Home");

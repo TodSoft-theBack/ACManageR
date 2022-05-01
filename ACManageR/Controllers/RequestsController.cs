@@ -9,6 +9,7 @@ using ACManageR.ActionFilters;
 using ACManageR.ViewModels;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 
 namespace ACManageR.Controllers
 {
@@ -25,7 +26,7 @@ namespace ACManageR.Controllers
         public IActionResult Index()
         {
             var loggedUser = HttpContext.Session.GetObject<Users>("loggedUser");
-            ViewBag.AllRequests = _database.Requests.ToList();
+            ViewBag.AllRequests = _database.Requests.Include(r => r.Status).ToList();
             return View();
         }
 
@@ -49,13 +50,13 @@ namespace ACManageR.Controllers
             if (!(input.Picture is null))
             {
                 string id = Guid.NewGuid().ToString();
-                string fileName = Path.Combine("RequestImages", id + Path.GetExtension(input.Picture.FileName));
+                string fileName = Path.Combine(_hostEnvironment.WebRootPath,"RequestImages", id + Path.GetExtension(input.Picture.FileName));
                 input.Picture.CopyTo(new FileStream(fileName, FileMode.Create));
                 request.Picture = id + Path.GetExtension(input.Picture.FileName);
             }
             _database.Requests.Add(request);
             _database.SaveChanges();
-            return Index();
+            return RedirectToAction("Index");
         }
     }
 }

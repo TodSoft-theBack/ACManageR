@@ -16,26 +16,44 @@
     }
 
 }
-@switch (loggedUser.RoleId)
-{
-    case (int)RolesEnum.Admin:
-        <h1>All requests:</h1>
-        break;
-    case (int)RolesEnum.Customer:
-        <a asp-action="MakeRequest" class="btn btn-dark" style="float:right;">Make a request!</a>
-        <h1>History:</h1>
-        break;
-    case (int)RolesEnum.Tech:
-        <h1>Asigned to me:</h1>
-        break;
-}
+
 <div class="pageContainer">
+    <div class="filterContainer" style="margin: 0 5rem;">
+        <h1 class="text-center">Filters</h1>
+        <div class="filterStatus"> <a href="#" class="btn btn-outline-secondary">Filter status</a></div>
+    </div>
     <div class="AllRequestsContainer">
 
+        @switch (loggedUser.RoleId)
+        {
+            case (int)RolesEnum.Admin:
+                <h1>All requests:</h1>
+                break;
+            case (int)RolesEnum.Customer:
+                <h1>History:</h1>
+                break;
+            case (int)RolesEnum.Tech:
+                <h1>Asigned to me:</h1>
+                break;
+        }
+        @if (loggedUser.RoleId == (int)RolesEnum.Customer)
+        {
+            <a asp-action="MakeRequest" class="btn btn-dark">Make a request!</a>
+        }
         @foreach (var request in requests)
         {
-            <div class="requestContainer">
-                <h1>@request.Name</h1>
+            <div class="requestContainer cards">
+
+                @if (!(request.Picture is null))
+                {
+                    <div class="pictureContainer" style="width: 20%; height:10%">
+                        <img src="~/RequestImages/@request.Picture" alt="Image for @request.Name" style="width:100%; height:100%; border-radius: 5rem;" />
+                    </div>
+                }
+                <div style="flex-direction:column;">
+                    <h3>@request.Name</h3>
+                    <div class="indicatior">@request.Status.StatusType</div>
+                </div>
             </div>
         }
     </div>

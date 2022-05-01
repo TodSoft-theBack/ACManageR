@@ -8,22 +8,16 @@ using System.Threading.Tasks;
 
 namespace ACManageR.ViewModels
 {
-    public class CreateUserVM
+    public class EditUserVM
     {
+        public int Id { get; set; }
         [DisplayName("Username: ")]
         [Required(ErrorMessage = "*This field is Required!")]
         [DataType(DataType.Text)]
         public string Username { get; set; }
-
-        [DisplayName("Password: ")]
-        [Required(ErrorMessage = "*This field is Required!")]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
-
         [DisplayName("Role: ")]
         [Required(ErrorMessage = "*This field is Required!")]
         public int RoleId { get; set; }
-
         public List<SelectListItem> RoleOptions { get; set; }
     }
 }

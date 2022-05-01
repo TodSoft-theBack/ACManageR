@@ -6,18 +6,16 @@
     List<Users> users = ViewBag.AllUsers;
 }
 <h1 class="text-center">All users</h1>
-<div class="allUsersContainer text-center">
+<div class="allUsersContainer genericContainer">
     <a asp-action="CreateUser" asp-controller="Users" class="btn btn-outline-primary"> Create a new user!</a>
     @foreach (var user in users)
     {
-        <div class="userContainer">
+        <div class="userContainer cards" style="flex-direction:column;">
             <h3>@user.Username : @user.Role.RoleType</h3>
-            <form action="Users/DeleteUser/@user.Id" method="post">
-                <input type="submit" value="Delete user" class="btn btn-outline-danger" />
-            </form>
-            <form action="Users/EditUser/@user.Id" method="post">
-                <input type="submit" value="Edit user" class="btn btn-outline-danger" />
-            </form>
+            <div class="adminActions">
+                <a href="Users/DeleteUserPage/@user.Id" class="btn btn-danger">DeleteUser</a>
+                <a href="Users/EditUserPage/@user.Id" class="btn btn-danger">Edit user</a>
+            </div>
         </div>
     }
 </div>

@@ -15,7 +15,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="RequestImages\" />
+    <Folder Include="wwwroot\RequestImages\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\RequestImages\92afa99e-97a2-44fd-a192-20c4e639856c.png" />
   </ItemGroup>
 
 </Project>
